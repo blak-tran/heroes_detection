@@ -1,3 +1,4 @@
 datasets/*
 checkpoint*
 temp/*
+__pycache__/
