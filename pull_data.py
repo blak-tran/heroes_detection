@@ -48,7 +48,8 @@ for img in img_tags:
             print("Img Link: ", img_url)
             img_response = requests.get(img_url, stream=True)
             img_path = f"{save_path_root}/{hero_name}.jpg"
-            with open(img_path, "wb") as img_file:
-                    for chunk in img_response.iter_content(chunk_size=8192):
-                        img_file.write(chunk)
-            print(f"Download: {img_path}")
+            if not os.path.isfile(img_path):
+                with open(img_path, "wb") as img_file:
+                        for chunk in img_response.iter_content(chunk_size=8192):
+                            img_file.write(chunk)
+                print(f"Download: {img_path}")
