@@ -9,6 +9,10 @@ pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --e
 
 pip install -r requirements.txt
 
+
+# Pull data from League_of_Legends:_Wild_Rift
+python pull_data.py
+
 # Retrain the model.
 python train.py
 
