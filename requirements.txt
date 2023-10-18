@@ -1,0 +1,4 @@
+pillow
+bs4
+opencv-python
+numpy
