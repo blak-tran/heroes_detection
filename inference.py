@@ -67,10 +67,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Data transformations
 transform = transforms.Compose([
     transforms.Resize((42, 42)),
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(10),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
-    transforms.ToTensor(),
+    transforms.ToTensor()
 ])
 
 
@@ -149,7 +146,7 @@ def detect_circles(img_path):
 # Example usage
 if __name__ == "__main__":
     # Load the trained model and original_dict (same dictionary used during training)
-    model_path = '/home/dattran/datadrive/research/heros_detection/checkpoint_epoch_50.pth'  # Replace with the actual path to your trained model file
+    model_path = '/home/dattran/datadrive/research/heros_detection/checkpoint_epoch_40.pth'  # Replace with the actual path to your trained model file
     # Load the checkpoint
     checkpoint = torch.load(model_path)
 
@@ -182,7 +179,7 @@ if __name__ == "__main__":
             cv2.imwrite(img_crop_path, cropped_img)
             
             # Predict the hero
-            predicted_hero = predict_hero(img_crop_path, model, original_dict)
+            predicted_hero = predict_hero(img_crop_path, model)
             
             # Print the predicted hero name and write it to the file
             print(f"{base_name} Predicted Hero: {predicted_hero}")

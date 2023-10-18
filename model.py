@@ -13,9 +13,8 @@ class SimpleCNN(nn.Module):
         # Calculate the total number of output features from the convolutional layers
         total_output_features = 64 * (image_height // 4) * (image_width // 4)  # Two max-pooling layers reduce dimensions by half twice
         self.fc_layer = nn.Sequential(
-            nn.Linear(total_output_features, 512),
+            nn.Linear(total_output_features, 512),  # Adjust input features based on total_output_features
             nn.ReLU(),
-            nn.Dropout(0.5),  # Dropout layer with 50% probability
             nn.Linear(512, num_classes)
         )
 

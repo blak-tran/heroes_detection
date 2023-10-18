@@ -7,6 +7,8 @@ from PIL import Image
 import os
 from model import SimpleCNN
 
+import matplotlib as plt
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 original_dict = {
@@ -83,7 +85,6 @@ class CustomDataset(Dataset):
         
         # Convert hero name to a numerical label (index)
         label = original_dict.get(hero_name, -1)  # Use the original_dict to get the label
-        print(hero_name, label)
         if label == -1:
             raise ValueError(f"Unknown hero name: {hero_name}")
         
@@ -121,7 +122,9 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
 
 # Training loop
-num_epochs = 30
+num_epochs = 40
+# Initialize an empty list to store the loss values
+losses = []
 for epoch in range(num_epochs):
     total_loss = 0.0
     for i, (images, labels) in enumerate(data_loader):
@@ -138,8 +141,13 @@ for epoch in range(num_epochs):
         total_loss += loss.item()
         if (i + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(data_loader)}], Loss: {loss.item():.4f}')
-
+        # Append the current loss to the list
+        losses.append(loss.item())
+        
 print('Training finished!')
+
+# Display a message indicating that the plot has been saved
+print('Training loss plot saved as training_loss_plot.png')
 
 checkpoint_path = f'checkpoint_epoch_{epoch + 1}.pth'
 torch.save({
