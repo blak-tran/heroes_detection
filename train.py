@@ -7,8 +7,6 @@ from PIL import Image
 import os
 from model import SimpleCNN
 
-import matplotlib as plt
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 original_dict = {
