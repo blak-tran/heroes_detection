@@ -6,6 +6,7 @@ from torchvision import transforms
 from PIL import Image
 import os
 from model import SimpleCNN
+import re
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -57,13 +58,35 @@ original_dict = {
     "Teemo": 44,
     "Tristana": 45,
     "Tryndamere": 46,
-    "Varus": 47,
-    "Vayne": 48,
-    "Vi": 49,
-    "Wukong": 50,
-    "Yasuo": 51,
-    "Zed": 52,
-    "Ziggs": 53
+    "Twisted_Fate": 47,
+    "Varus": 48,
+    "Vayne": 49,
+    "Vi": 50,
+    "Xin_Zhao": 51,
+    "Yasuo": 52,
+    "Wukong": 53,
+    "Zed": 54,
+    "Ziggs": 55,
+    "Dr_Mundo": 56,
+    "Ahri": 57,
+    "Akali": 58,
+    "Alistar": 59,
+    "Amumu": 60,
+    "Annie": 61,
+    "Ashe": 62,
+    "Aurelion_Sol": 63,
+    "Blitzcrank": 64,
+    "Braum": 65,
+    "Camille": 66,
+    "Corki": 67,
+    "Darius": 68,
+    "Diana": 69,
+    "KaiSa": 70,
+    "KhaZix": 71,
+    "Jarvan_IV": 72,
+    "Master_Yi": 73,
+    "Lee_Sin": 74,
+    "Miss_Fortune": 75
 }
 
 # Custom dataset class
@@ -79,7 +102,17 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         img_name = os.path.join(self.data_folder, self.image_files[idx])
         image = Image.open(img_name).convert("RGB")
-        hero_name = os.path.splitext(self.image_files[idx])[0]  # Extract hero name from filename
+        # Extract hero name from filename
+        img_name = os.path.splitext(img_name)[0]
+        img_name = img_name.split("/")[-1]
+        element_number = 2  # Change this to the desired element number
+
+        pattern = re.compile(rf'^(.*?)_(\d+)$')
+        match = pattern.match(img_name)
+        if match:
+            hero_name = match.group(1)
+        else:
+            hero_name = img_name
         
         # Convert hero name to a numerical label (index)
         label = original_dict.get(hero_name, -1)  # Use the original_dict to get the label
@@ -106,10 +139,10 @@ data_folder = '/home/dattran/datadrive/research/heros_detection/datasets/heroes/
 
 # Custom dataset and dataloader
 dataset = CustomDataset(data_folder, transform=transform)
-data_loader = DataLoader(dataset, batch_size=2, shuffle=True)
+data_loader = DataLoader(dataset, batch_size=16, shuffle=True)
     
 # Number of classes (54 in this case)
-num_classes = 54
+num_classes = 76
 
 # Initialize the model, loss function, and optimizer
 model = SimpleCNN(image_height = 42,image_width = 42, num_classes=num_classes)
