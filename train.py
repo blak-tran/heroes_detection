@@ -7,6 +7,7 @@ from PIL import Image
 import os
 from model import SimpleCNN
 import re
+from torch.utils.tensorboard import SummaryWriter 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -152,10 +153,10 @@ model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
 
-# Training loop
-num_epochs = 40
 # Initialize an empty list to store the loss values
 losses = []
+writer = SummaryWriter('logs') 
+num_epochs = 40
 for epoch in range(num_epochs):
     total_loss = 0.0
     for i, (images, labels) in enumerate(data_loader):
@@ -172,10 +173,19 @@ for epoch in range(num_epochs):
         total_loss += loss.item()
         if (i + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(data_loader)}], Loss: {loss.item():.4f}')
-        # Append the current loss to the list
-        losses.append(loss.item())
         
+        # Log the loss to TensorBoard every 10 steps
+        step = epoch * len(data_loader) + i
+        writer.add_scalar('Loss', loss.item(), step)
+    
+    # Log the total loss at the end of each epoch
+    writer.add_scalar('Total Loss', total_loss, epoch)
+    
 print('Training finished!')
+
+# Close the SummaryWriter
+writer.close()
+        
 
 # Display a message indicating that the plot has been saved
 print('Training loss plot saved as training_loss_plot.png')
