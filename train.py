@@ -183,8 +183,17 @@ for epoch in range(num_epochs):
     
 print('Training finished!')
 
-# Close the SummaryWriter
+dummy_input = torch.randn(1, 3, 42, 42).to(device)  # Example input tensor with shape (batch_size, channels, height, width)
+
+# Create a SummaryWriter
+writer = SummaryWriter('logs')
+
+# Add the model graph to TensorBoard
+writer.add_graph(model, dummy_input)
+
+# Close the SummaryWriter when you are done
 writer.close()
+
         
 
 # Display a message indicating that the plot has been saved
